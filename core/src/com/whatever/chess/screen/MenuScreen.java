@@ -113,8 +113,14 @@ public class MenuScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(screenY < 600)
-            board.setBoardSquare(new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE),'g');
+        if(screenY < 600){
+            Position clicked = new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE);
+            if(board.getPieceinSquare(clicked) != null){
+                board.paintSquares(board.getPieceinSquare(clicked).possiblePositions(),'g');
+            }
+        }
+
+            //board.setBoardSquare(new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE),'g');
         return false;
     }
 

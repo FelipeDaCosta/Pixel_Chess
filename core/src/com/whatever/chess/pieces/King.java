@@ -18,9 +18,9 @@ public class King extends Piece{
     // Enum used to organize pieceTypes;
     PieceType pieceType;
 
-    public King(Position pos, Board board, Sprite pieceSprite){
-        super(pos, board, pieceSprite);
-        this.setType(pieceType.KING);
+    public King(Position pos, Board board, Sprite pieceSprite, boolean color){
+        super(pos, board, pieceSprite, color);
+        this.setType(PieceType.KING);
     }
 
     /*

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.whatever.chess.pieces.Pawn;
 import com.whatever.chess.pieces.Piece;
+import com.whatever.chess.pieces.Rook;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,8 @@ public class Board{
     // Holds all black blackPawn
     private ArrayList<Pawn> blackPawn;
 
+    private Rook rook;
+
     // CONSTRUCTOR
     public Board(SpriteBatch sb){
         // Check if files exists
@@ -75,13 +78,15 @@ public class Board{
         pieceMatrix = new Piece[8][8]; // Empty squares are null
         boardColor = new Sprite[8][8];
 
+        rook = new Rook(new Position(3,3), this, new Sprite(new Texture(Gdx.files.internal("blackRook.png"))), true);
+        pieceMatrix[3][3] = rook;
 
         // We only need one pawn sprite. Printing the same sprite several times won't use that much memory
-        pawnSprite = new Sprite(new Texture(Gdx.files.internal("Pawn.png")));
+        pawnSprite = new Sprite(new Texture(Gdx.files.internal("whitePawn.png")));
         blackPawn = new ArrayList<Pawn>(8);
 
         for(int i = 0; i < 8; i ++){
-            blackPawn.add(i, new Pawn(new Position(i, 1), this, pawnSprite) );
+            blackPawn.add(i, new Pawn(new Position(i, 1), this, pawnSprite, true) );
             pieceMatrix[i][1] = blackPawn.get(i);
         }
 
@@ -118,6 +123,9 @@ public class Board{
         }
     }
 
+    /*
+    * Returns true if cell is green or red
+    * */
     public boolean isNaturalColor(Position pos){
         int x = pos.getX();
         int y = pos.getY();
@@ -127,7 +135,37 @@ public class Board{
     }
 
 
+    /*
+    * Paint all the squares in the positions arraylist with the color chosen.
+    * If color == 'n', uses the natural color of the square
+    * */
+    public void paintSquares(ArrayList<Position> positions, char color){
+        Sprite newSquare;
+        if(color == 'r'){
+            newSquare = redSquare;
+        }
+        else if(color == 'g'){
+            newSquare = greenSquare;
+        }
+        else if(color == 'n'){
+            for(Position pos : positions){
+                if((pos.getX() + pos.getY())%2 == 0){
+                    newSquare = blackSquare;
+                }
+                else{
+                    newSquare = whiteSquare;
+                }
+                boardColor[pos.getX()][pos.getY()] = newSquare;
+            }
+            return;
+        }
+        else // case something wrong was assigned to color
+            return;
 
+        for(Position pos : positions){
+            boardColor[pos.getX()][pos.getY()] = newSquare;
+        }
+    }
 
     /*
     * Returns coordinates in the screen for the position we pass

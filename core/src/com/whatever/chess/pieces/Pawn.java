@@ -15,8 +15,8 @@ public class Pawn extends Piece {
 
     boolean firstMove;
 
-    public Pawn(Position pos, Board board, Sprite pieceSprite){
-        super(pos, board, pieceSprite);
+    public Pawn(Position pos, Board board, Sprite pieceSprite, boolean color){
+        super(pos, board, pieceSprite, color);
         this.firstMove = true;
     }
     /*
@@ -37,21 +37,27 @@ public class Pawn extends Piece {
         ArrayList<Position> possiblePos = new ArrayList<Position>();
         // Basic movement
         Position moveForward = new Position(x, y+1);
-        if(board.getPieceinSquare(moveForward) == null)
+        if(board.getPieceinSquare(moveForward) == null) {
             possiblePos.add(moveForward);
-        if(firstMove)
-            possiblePos.add(new Position(x,y+2));
+            // Moving two cells
+            moveForward = new Position(x,y+2);
+            if (firstMove && board.getPieceinSquare(moveForward) == null)
+                possiblePos.add(new Position(x, y + 2));
+        }
 
         // Capture movement
         if(x != 0) {
             Position captureLeft = new Position(x - 1, y + 1);
-            if(board.getPieceinSquare(captureLeft) != null)
+            // If there's a piece in the newPos and its from a different color
+            if(board.getPieceinSquare(captureLeft) != null &&
+                    board.getPieceinSquare(captureLeft).getColor() != this.getColor())
                 possiblePos.add(captureLeft);
         }
 
         if(x != 7){
             Position captureRight = new Position(x + 1, y + 1);
-            if(board.getPieceinSquare(captureRight) != null){
+            if(board.getPieceinSquare(captureRight) != null &&
+                    board.getPieceinSquare(captureRight).getColor() != this.getColor()){
                 possiblePos.add(captureRight);
             }
         }

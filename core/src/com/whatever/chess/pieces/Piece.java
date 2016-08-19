@@ -20,6 +20,7 @@ public abstract class Piece {
 
     private Sprite pieceSprite;
 
+
     // Black = true, White = false
     private boolean color;
 
@@ -31,10 +32,11 @@ public abstract class Piece {
     * we pass the board so the piece knows where the other pieces are when it's calculating
     * the squares it can move to
     * */
-    public Piece(Position pos, Board board, Sprite pieceSprite) {
+    public Piece(Position pos, Board board, Sprite pieceSprite, boolean color) {
         this.position = new Position(pos.getX(), pos.getY());
         this.board = board;
         this.pieceSprite = pieceSprite;
+        this.color = color;
     }
 
 
@@ -93,5 +95,14 @@ public abstract class Piece {
 
     public void setPieceSprite(Sprite pieceSprite) {
         this.pieceSprite = pieceSprite;
+    }
+
+
+    public boolean getColor() {
+        return color;
+    }
+
+    public void setColor(boolean color) {
+        this.color = color;
     }
 }

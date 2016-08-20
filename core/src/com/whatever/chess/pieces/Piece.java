@@ -40,18 +40,12 @@ public abstract class Piece {
     }
 
 
-    /*
-    * Returns true if the piece can go to the square newPos
-    * */
-    public abstract boolean isValidMov(Position newPos);
 
     /*
     * Move the piece to newPos (only if it's a valid move)
     * */
     public void move(Position newPos){
-        if(this.isValidMov(newPos)) {
             this.position.setPosition(newPos.getX(), newPos.getY());
-        }
     }
 
     /*

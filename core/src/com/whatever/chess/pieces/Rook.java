@@ -18,11 +18,6 @@ public class Rook extends Piece {
     }
 
     @Override
-    public boolean isValidMov(Position newPos) {
-        return false;
-    }
-
-    @Override
     public ArrayList<Position> possiblePositions() {
         ArrayList<Position> possiblePos = new ArrayList<Position>();
         int x = this.getPosition().getX();

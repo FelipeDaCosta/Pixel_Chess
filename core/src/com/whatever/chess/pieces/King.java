@@ -23,23 +23,6 @@ public class King extends Piece{
         this.setType(PieceType.KING);
     }
 
-    /*
-    * return true if piece can go to newPos
-    * */
-    @Override
-    public boolean isValidMov(Position newPos) {
-        // Checks if newPos is in range
-        if((newPos.getX() < 8 && newPos.getX() > 0) &&
-                (newPos.getY() < 8 && newPos.getY() > 0)){
-            return false;
-        }
-        // The king can move only up to one square in any direction
-        if(Math.abs(this.getPosition().getX() - newPos.getX()) > 1
-                || Math.abs(this.getPosition().getY() - newPos.getY()) > 1) {
-            return false;
-        }
-        return true;
-    }
 
     public ArrayList<Position> possiblePositions(){
         int x = this.getPosition().getX();

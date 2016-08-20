@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.whatever.chess.pieces.Knight;
 import com.whatever.chess.pieces.Pawn;
 import com.whatever.chess.pieces.Piece;
 import com.whatever.chess.pieces.Rook;
@@ -47,6 +48,8 @@ public class Board{
 
     private Rook rook;
 
+    private Knight knight;
+
     // CONSTRUCTOR
     public Board(SpriteBatch sb){
         // Check if files exists
@@ -78,8 +81,11 @@ public class Board{
         pieceMatrix = new Piece[8][8]; // Empty squares are null
         boardColor = new Sprite[8][8];
 
-        rook = new Rook(new Position(3,3), this, new Sprite(new Texture(Gdx.files.internal("blackRook.png"))), true);
-        pieceMatrix[3][3] = rook;
+        //rook = new Rook(new Position(3,3), this, new Sprite(new Texture(Gdx.files.internal("blackRook.png"))), true);
+        //pieceMatrix[3][3] = rook;
+
+        knight = new Knight(new Position(4,4), this, new Sprite(new Texture(Gdx.files.internal("blackKnight.png"))), true);
+        pieceMatrix[4][4] = knight;
 
         // We only need one pawn sprite. Printing the same sprite several times won't use that much memory
         pawnSprite = new Sprite(new Texture(Gdx.files.internal("whitePawn.png")));
@@ -104,6 +110,8 @@ public class Board{
     }
 
     /* --- END CONSTRUCTOR ---*/
+
+
 
     public void setBoardSquare(Position pos, char color){
         switch(color){

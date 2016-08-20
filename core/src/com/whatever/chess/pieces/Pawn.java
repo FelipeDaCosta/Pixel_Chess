@@ -19,16 +19,7 @@ public class Pawn extends Piece {
         super(pos, board, pieceSprite, color);
         this.firstMove = true;
     }
-    /*
-    * Returns true if a movement is valid
-    * */
-    public boolean isValidMov(Position newPos){
-        if(this.getPosition().getX() == newPos.getX())
-            if(this.getPosition().getY() + 1 == newPos.getY() ||
-                    (firstMove && this.getPosition().getY() + 2 == newPos.getY()))
-                        return true;
-        return false;
-    }
+
 
     public ArrayList<Position> possiblePositions(){
         Board board = this.getBoard();

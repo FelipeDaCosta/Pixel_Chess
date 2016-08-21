@@ -21,6 +21,8 @@ public abstract class Piece {
     private Sprite pieceSprite;
 
 
+    private  String spritePath;
+
     // Black = true, White = false
     private boolean color;
 
@@ -58,7 +60,9 @@ public abstract class Piece {
         }
     }
 
+    // Returns a list with all the possible positions the piece can go to
     public abstract ArrayList<Position> possiblePositions();
+
 
     /*
     * Getters & Setters
@@ -91,6 +95,13 @@ public abstract class Piece {
         this.pieceSprite = pieceSprite;
     }
 
+    public String getSpritePath() {
+        return spritePath;
+    }
+
+    public void setSpritePath(String spritePath) {
+        this.spritePath = spritePath;
+    }
 
     public boolean getColor() {
         return color;

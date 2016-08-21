@@ -113,6 +113,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        System.out.print("Clicked");
         if(screenY < 600){
             Position clicked = new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE);
             if(board.getPieceinSquare(clicked) != null){

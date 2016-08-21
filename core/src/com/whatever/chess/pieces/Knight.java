@@ -14,7 +14,7 @@ public class Knight extends Piece {
         super(pos, board, pieceSprite, color);
     }
 
-
+    // Works
     @Override
     public ArrayList<Position> possiblePositions() {
         ArrayList<Position> possiblePos = new ArrayList<Position>();

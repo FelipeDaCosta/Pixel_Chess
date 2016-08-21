@@ -5,10 +5,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.whatever.chess.pieces.Bishop;
+import com.whatever.chess.pieces.King;
 import com.whatever.chess.pieces.Knight;
 import com.whatever.chess.pieces.Pawn;
 import com.whatever.chess.pieces.Piece;
+import com.whatever.chess.pieces.Queen;
 import com.whatever.chess.pieces.Rook;
+import com.whatever.chess.util.Util;
 
 import java.util.ArrayList;
 
@@ -43,58 +47,93 @@ public class Board{
     // Creating several spritebatchs is a bad habit because it's [pretty heavy
     private SpriteBatch spriteBatch;
 
-    // Holds all black blackPawn
-    private ArrayList<Pawn> blackPawn;
+    // Pieces
 
-    private Rook rook;
+    Pawn[] whitePawns, blackPawns;
+    King whiteKing, blackKing;
+    Queen whiteQueen, blackQueen;
+    Bishop[] whiteBishop, blackBishop;
+    Knight[] whiteKnight, blackKnight;
+    Rook[] whiteRook, blackRook;
 
-    private Knight knight;
+    Queen bishop;
 
     // CONSTRUCTOR
     public Board(SpriteBatch sb){
-        // Check if files exists
-        if(!Gdx.files.internal(blackSquareFileName).exists()){
-            System.out.println("BlackSquare file missing");
-            System.exit(1);
-        }
-        if(!Gdx.files.internal(whiteSquareFileName).exists()){
-            System.out.println("BlackSquare file missing");
-            System.exit(1);
-        }
-        if(!Gdx.files.internal(greenSquareFileName).exists()){
-            System.out.println("BlackSquare file missing");
-            System.exit(1);
-        }
-        if(!Gdx.files.internal(redSquareFileName).exists()){
-            System.out.println("BlackSquare file missing");
-            System.exit(1);
-        }
-
         spriteBatch = sb;
 
-        // Loading sprites
-        blackSquare = new Sprite(new Texture(blackSquareFileName));
-        whiteSquare = new Sprite(new Texture(whiteSquareFileName));
-        greenSquare = new Sprite(new Texture(greenSquareFileName));
-        redSquare = new Sprite(new Texture(redSquareFileName));
+
+
+
+        // Loading Square sprites
+        blackSquare = Util.loadSprite(blackSquareFileName);
+        whiteSquare = Util.loadSprite(whiteSquareFileName);
+        greenSquare = Util.loadSprite(greenSquareFileName);
+        redSquare = Util.loadSprite(redSquareFileName);
 
         pieceMatrix = new Piece[8][8]; // Empty squares are null
         boardColor = new Sprite[8][8];
 
-        //rook = new Rook(new Position(3,3), this, new Sprite(new Texture(Gdx.files.internal("blackRook.png"))), true);
-        //pieceMatrix[3][3] = rook;
-
-        knight = new Knight(new Position(4,4), this, new Sprite(new Texture(Gdx.files.internal("blackKnight.png"))), true);
-        pieceMatrix[4][4] = knight;
-
-        // We only need one pawn sprite. Printing the same sprite several times won't use that much memory
-        pawnSprite = new Sprite(new Texture(Gdx.files.internal("whitePawn.png")));
-        blackPawn = new ArrayList<Pawn>(8);
-
-        for(int i = 0; i < 8; i ++){
-            blackPawn.add(i, new Pawn(new Position(i, 1), this, pawnSprite, true) );
-            pieceMatrix[i][1] = blackPawn.get(i);
+        // Creating pawns
+        whitePawns = new Pawn[8];
+        blackPawns = new Pawn[8];
+        for(int i = 0; i < 8; i++){
+            whitePawns[i] = new Pawn(new Position(i,1), this, Util.loadSprite(Util.whitePawn), false);
+            blackPawns[i] = new Pawn(new Position(i,6), this, Util.loadSprite(Util.blackPawn), true);
+            pieceMatrix[i][1] = whitePawns[i];
+            pieceMatrix[i][6] = blackPawns[i];
         }
+
+        // Creating rooks
+        blackRook = new Rook[2];
+        whiteRook = new Rook[2];
+        for(int i = 0; i < 2; i++){
+            blackRook[i] = new Rook(new Position(i*7,7), this, Util.loadSprite(Util.blackRook), true);
+            whiteRook[i] = new Rook(new Position(i*7,0), this, Util.loadSprite(Util.whiteRook), false);
+            pieceMatrix[i*7][7] = blackRook[i];
+            pieceMatrix[i*7][0] = whiteRook[i];
+        }
+
+        // Creating knights
+        blackKnight = new Knight[2];
+        whiteKnight = new Knight[2];
+        for(int i = 0; i < 2; i++){
+            blackKnight[i] = new Knight(new Position((i*5) + 1, 7), this,
+                    Util.loadSprite(Util.blackKnight), true);
+            whiteKnight[i] = new Knight(new Position((i*5) + 1, 0), this,
+                    Util.loadSprite(Util.whiteKnight), false);
+
+            pieceMatrix[(i*5)+1][7] = blackKnight[i];
+            pieceMatrix[(i*5)+1][0] = whiteKnight[i];
+        }
+
+        // Creating bishops
+        blackBishop = new Bishop[2];
+        whiteBishop = new Bishop[2];
+        for(int i = 0; i < 2; i++){
+            blackBishop[i] = new Bishop(new Position((i*3) + 2, 7), this,
+                    Util.loadSprite(Util.blackBishop), true);
+            whiteBishop[i] = new Bishop(new Position(i*3 + 2, 0), this,
+                    Util.loadSprite(Util.whiteBishop), false);
+            pieceMatrix[(i*3) + 2][7] = blackBishop[i];
+            pieceMatrix[(i*3) + 2][0] = whiteBishop[i];
+        }
+
+        // Creating queen
+        blackQueen = new Queen(new Position(4,7), this, Util.loadSprite(Util.blackQueen), true);
+        whiteQueen = new Queen(new Position(3,0), this, Util.loadSprite(Util.whiteQueen), false);
+        pieceMatrix[4][7] = blackQueen;
+        pieceMatrix[3][0] = whiteQueen;
+
+        // Creatin king
+        blackKing = new King(new Position(3,7), this, Util.loadSprite(Util.blackKing), true);
+        whiteKing = new King(new Position(4,0), this, Util.loadSprite(Util.whiteKing), false);
+        pieceMatrix[3][7] = blackKing;
+        pieceMatrix[4][0] = whiteKing;
+
+
+        bishop = new Queen(new Position(3,3), this, Util.loadSprite(Util.blackQueen), true);
+        pieceMatrix[3][3] = bishop;
 
         // Fills the board with the squares
         for(int i = 0; i < 8;i++){
@@ -111,7 +150,9 @@ public class Board{
 
     /* --- END CONSTRUCTOR ---*/
 
-
+    /*
+    * Loads all pieces
+    * */
 
     public void setBoardSquare(Position pos, char color){
         switch(color){

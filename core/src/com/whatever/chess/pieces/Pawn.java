@@ -20,6 +20,7 @@ public class Pawn extends Piece {
         this.firstMove = true;
     }
 
+    // So that we can set firstMove to false after first movement
     @Override
     public void move(Position newPos) {
         super.move(newPos);
@@ -32,19 +33,30 @@ public class Pawn extends Piece {
         int x = this.getPosition().getX();
         int y = this.getPosition().getY();
         ArrayList<Position> possiblePos = new ArrayList<Position>();
+        Position curPos; // Current position being analysed
+
+        // If the piece is white, we're subtracting 1 to the cur Y position
+        // If its black, we add 1
+        int add;
+        if(this.getColor())
+            add = -1;
+        else
+            add = +1;
+
         // Basic movement
-        Position moveForward = new Position(x, y+1);
-        if(board.getPieceinSquare(moveForward) == null) {
-            possiblePos.add(moveForward);
+        curPos = new Position(x,y + add);
+        if(board.getPieceinSquare(curPos) == null) {
+            possiblePos.add(curPos);
             // Moving two cells
-            moveForward = new Position(x,y+2);
-            if (firstMove && board.getPieceinSquare(moveForward) == null)
-                possiblePos.add(new Position(x, y + 2));
+            if(firstMove)
+                curPos = new Position(x, y + 2*add);
+                if (board.getPieceinSquare(curPos) == null)
+                    possiblePos.add(curPos);
         }
 
         // Capture movement
         if(x != 0) {
-            Position captureLeft = new Position(x - 1, y + 1);
+            Position captureLeft = new Position(x - 1, y + add);
             // If there's a piece in the newPos and its from a different color
             if(board.getPieceinSquare(captureLeft) != null &&
                     board.getPieceinSquare(captureLeft).getColor() != this.getColor())
@@ -52,14 +64,19 @@ public class Pawn extends Piece {
         }
 
         if(x != 7){
-            Position captureRight = new Position(x + 1, y + 1);
+            Position captureRight = new Position(x + 1, y + add);
             if(board.getPieceinSquare(captureRight) != null &&
                     board.getPieceinSquare(captureRight).getColor() != this.getColor()){
                 possiblePos.add(captureRight);
             }
         }
 
+        for(Position pos: possiblePos){
+            System.out.println("X: " + pos.getX() + "Y: " + pos.getY());
+        }
+
         // En passant will be implemented later
+
         return possiblePos;
     }
 

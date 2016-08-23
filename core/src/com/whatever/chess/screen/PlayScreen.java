@@ -37,7 +37,7 @@ public class PlayScreen implements Screen, InputProcessor {
     *   Receives spriteBatch so we don't have to create a new one
     * */
     public PlayScreen(SpriteBatch batch) {
-        turn = false;
+        turn = true;
         this.batch = batch;
         background = new Color(0, 0, 0, 1);
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -58,9 +58,6 @@ public class PlayScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(.5f,.5f,.5f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
-      //  batch.begin();
-       // playbtn.draw(batch);
-      //  batch.end();
         board.drawBoard();
         board.drawAllPieces();
     }

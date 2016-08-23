@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.whatever.chess.board.Board;
 import com.whatever.chess.board.Position;
+import com.whatever.chess.pieces.Piece;
 
 /**
  * Created by felipe on 7/31/2016.
@@ -26,24 +27,21 @@ public class PlayScreen implements Screen, InputProcessor {
     //  Color background
     Color background;
 
-    Sprite playbtn;
-
     Board board;
+
+    // false = white's turn
+    boolean turn;
+
 
     /*
     *   Receives spriteBatch so we don't have to create a new one
     * */
     public PlayScreen(SpriteBatch batch) {
+        turn = false;
         this.batch = batch;
         background = new Color(0, 0, 0, 1);
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
-
-        playbtn = new Sprite(new Texture(Gdx.files.internal("PlayButton.png")));
-        if (playbtn == null){
-            System.exit(1);
-        }
-        playbtn.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 
         board = new Board(batch);
         Gdx.input.setInputProcessor(this);
@@ -89,7 +87,6 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-        playbtn.getTexture().dispose();
 
     }
 
@@ -113,12 +110,26 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.print("Clicked");
+        System.out.println("Clicked");
         if(screenY < 600){
-            Position clicked = new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE);
-            if(board.getPieceinSquare(clicked) != null){
-                board.paintSquares(board.getPieceinSquare(clicked).possiblePositions(),'g');
-            }
+                Position clicked = new Position(screenX, screenY);
+                clicked.toBoard();
+                Piece clickedPiece = board.getPieceinSquare(clicked);
+                // if there's a piece selected && the piece color is playing this turn
+                if (clickedPiece != null && clickedPiece.getColor() == turn) {
+                    board.setSpecialSquares(clickedPiece.possiblePositions());
+                    board.setSelectedPiece(clickedPiece);
+                }
+                else if(clickedPiece == null){
+                    System.out.println("Moving");
+                    board.movePiece(clicked);
+                    board.setSpecialSquares(null);
+                    board.setSelectedPiece(null);
+                }
+                else {
+                    board.setSpecialSquares(null);
+                    board.setSelectedPiece(null);
+                }
         }
 
             //board.setBoardSquare(new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE),'g');

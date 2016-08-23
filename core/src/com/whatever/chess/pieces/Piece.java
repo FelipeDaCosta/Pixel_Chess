@@ -47,7 +47,7 @@ public abstract class Piece {
     * Move the piece to newPos (only if it's a valid move)
     * */
     public void move(Position newPos){
-            this.position.setPosition(newPos.getX(), newPos.getY());
+            position.setPosition(newPos.getX(), newPos.getY());
     }
 
     /*

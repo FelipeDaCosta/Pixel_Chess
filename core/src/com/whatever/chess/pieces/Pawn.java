@@ -20,6 +20,12 @@ public class Pawn extends Piece {
         this.firstMove = true;
     }
 
+    @Override
+    public void move(Position newPos) {
+        super.move(newPos);
+        firstMove = false;
+    }
+
 
     public ArrayList<Position> possiblePositions(){
         Board board = this.getBoard();

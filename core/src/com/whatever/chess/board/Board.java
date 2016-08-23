@@ -16,6 +16,8 @@ import com.whatever.chess.util.Util;
 
 import java.util.ArrayList;
 
+import javafx.geometry.Pos;
+
 /**
  * Created by felipecosta on 8/6/16.
  */
@@ -47,6 +49,13 @@ public class Board{
     // Creating several spritebatchs is a bad habit because it's [pretty heavy
     private SpriteBatch spriteBatch;
 
+    // Will turn all positions in this array red or green
+    private ArrayList<Position> specialSquares;
+
+    // The piece that is currently selected
+    private Piece selectedPiece;
+
+
     // Pieces
 
     Pawn[] whitePawns, blackPawns;
@@ -56,14 +65,9 @@ public class Board{
     Knight[] whiteKnight, blackKnight;
     Rook[] whiteRook, blackRook;
 
-    Queen bishop;
-
     // CONSTRUCTOR
     public Board(SpriteBatch sb){
         spriteBatch = sb;
-
-
-
 
         // Loading Square sprites
         blackSquare = Util.loadSprite(blackSquareFileName);
@@ -131,9 +135,8 @@ public class Board{
         pieceMatrix[3][7] = blackKing;
         pieceMatrix[4][0] = whiteKing;
 
-
-        bishop = new Queen(new Position(3,3), this, Util.loadSprite(Util.blackQueen), true);
-        pieceMatrix[3][3] = bishop;
+        specialSquares = null;
+        selectedPiece = null;
 
         // Fills the board with the squares
         for(int i = 0; i < 8;i++){
@@ -150,10 +153,22 @@ public class Board{
 
     /* --- END CONSTRUCTOR ---*/
 
+    public void update(){
+        if(specialSquares != null){
+            for(Position square : specialSquares){
+                if(this.getPieceinSquare(square) == null){
+                    this.setBoardSquare(square, 'g');
+                }
+                else{
+                    this.setBoardSquare(square, 'r');
+                }
+            }
+        }
+    }
+
     /*
     * Loads all pieces
     * */
-
     public void setBoardSquare(Position pos, char color){
         switch(color){
             case 'r':
@@ -171,18 +186,6 @@ public class Board{
 
         }
     }
-
-    /*
-    * Returns true if cell is green or red
-    * */
-    public boolean isNaturalColor(Position pos){
-        int x = pos.getX();
-        int y = pos.getY();
-        if(boardColor[x][y].equals(redSquare) || boardColor[x][y].equals(greenSquare))
-            return false;
-        return false;
-    }
-
 
     /*
     * Paint all the squares in the positions arraylist with the color chosen.
@@ -214,6 +217,20 @@ public class Board{
         for(Position pos : positions){
             boardColor[pos.getX()][pos.getY()] = newSquare;
         }
+    }
+
+
+    /*
+    * Moves a piece
+    * */
+    public boolean movePiece(Position newPos){
+        if(specialSquares != null && specialSquares.contains(newPos)){
+            System.out.println("Moving 2");
+            pieceMatrix[selectedPiece.getPosition().getX()][selectedPiece.getPosition().getY()] = null;
+            pieceMatrix[newPos.getX()][newPos.getY()] = selectedPiece;
+            selectedPiece.move(newPos);
+        }
+        return false;
     }
 
     /*
@@ -274,19 +291,6 @@ public class Board{
         spriteBatch.end();
     }
 
-    /*
-    * Draw an specific square
-    * */
-    public void drawSquare(Position pos){
-        int x = pos.getX();
-        int y = pos.getY();
-        spriteBatch.begin();
-        // Aparently the sprite does not save the position when we first set it so we have
-        // to set it again
-        boardColor[x][y].setPosition(coordToScreen(x),coordToScreen(y));
-        boardColor[x][y].draw(spriteBatch);
-        spriteBatch.end();
-    }
 
     /*
     * Draw All the pieces to the screen based on their position in the pieceMatrix
@@ -303,5 +307,43 @@ public class Board{
             }
         }
         spriteBatch.end();
+    }
+
+    public ArrayList<Position> getSpecialSquares() {
+        return specialSquares;
+    }
+
+    public void setSpecialSquares(ArrayList<Position> specialSquares) {
+        if(this.specialSquares != null){
+            for(Position square : this.specialSquares){
+                if((square.getX() + square.getY()) % 2 == 0){
+                    this.setBoardSquare(square, 'b');
+                }
+                else{
+                    this.setBoardSquare(square, 'w');
+                }
+            }
+        }
+
+        if(specialSquares != null){
+            for(Position square : specialSquares){
+                if(this.getPieceinSquare(square) != null){
+                    this.setBoardSquare(square, 'r');
+                }
+                else{
+                    this.setBoardSquare(square, 'g');
+                }
+            }
+        }
+
+        this.specialSquares = specialSquares;
+    }
+
+    public Piece getSelectedPiece() {
+        return selectedPiece;
+    }
+
+    public void setSelectedPiece(Piece selectedPiece) {
+        this.selectedPiece = selectedPiece;
     }
 }

@@ -20,41 +20,84 @@ public class Knight extends Piece {
         ArrayList<Position> possiblePos = new ArrayList<Position>();
         int x = this.getPosition().getX();
         int y = this.getPosition().getY();
+        Board board = this.getBoard();
+        Position curPos;
 
         // Forward right
-        if(x < 6 && y < 7) {
-            possiblePos.add(new Position(x + 2, y + 1));
+        curPos = new Position(x + 2, y + 1);
+        if(x + 2 < 6 && y + 1 < 7) {
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
+
+        curPos = new Position(x + 1, y + 2);
         if(x < 7 && y < 6){
-            possiblePos.add(new Position(x + 1, y + 2));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
         // Forward left
+        curPos = new Position(x - 2, y + 1);
         if(x > 1 && y < 7){
-            possiblePos.add(new Position(x - 2, y + 1));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
+        curPos = new Position(x - 1, y + 2);
         if(x > 0 && y < 6){
-            possiblePos.add(new Position(x - 1, y + 2));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
         // Backward right
+        curPos = new Position(x + 2, y - 1);
         if(x < 6 && y > 0){
-            possiblePos.add(new Position(x + 2, y - 1));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
+        curPos = new Position(x + 1, y - 2);
         if(x < 7 && y > 1){
-            possiblePos.add(new Position(x + 1, y - 2));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
         // Backward left
+        curPos = new Position(x - 2, y - 1);
         if(x > 1 && y > 0){
-            possiblePos.add(new Position(x - 2, y - 1));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
+        curPos = new Position(x - 1, y - 2);
         if ( x > 0 && y > 1){
-            possiblePos.add(new Position(x - 1, y - 2));
+            possiblePos.add(curPos);
+            if(board.getPieceinSquare(curPos) != null
+                    && board.getPieceinSquare(curPos).getColor() == this.getColor()){
+                possiblePos.remove(curPos);
+            }
         }
 
         return possiblePos;

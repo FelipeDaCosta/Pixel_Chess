@@ -10,11 +10,13 @@ import com.whatever.chess.pieces.King;
 import com.whatever.chess.pieces.Knight;
 import com.whatever.chess.pieces.Pawn;
 import com.whatever.chess.pieces.Piece;
+import com.whatever.chess.pieces.PieceType;
 import com.whatever.chess.pieces.Queen;
 import com.whatever.chess.pieces.Rook;
 import com.whatever.chess.util.Util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javafx.geometry.Pos;
 
@@ -29,6 +31,7 @@ import javafx.geometry.Pos;
 * */
 public class Board{
     public static final int SQUARE_SIZE = 64; // Size of the square
+    public static final int BOARD_SIZE = 8;
 
     // File names for the squares
     private final String blackSquareFileName = "BlackSquare.png";
@@ -43,27 +46,25 @@ public class Board{
     // Sprites for the squares
     public Sprite blackSquare, whiteSquare, redSquare, greenSquare;
 
-    public Sprite pawnSprite;
 
     // Sprite batch is gonna be passed in this method constructor
     // Creating several spritebatchs is a bad habit because it's [pretty heavy
     private SpriteBatch spriteBatch;
 
     // Will turn all positions in this array red or green
-    private ArrayList<Position> specialSquares;
+    private HashSet<Position> specialSquares;
 
     // The piece that is currently selected
     private Piece selectedPiece;
 
 
     // Pieces
-
-    Pawn[] whitePawns, blackPawns;
-    King whiteKing, blackKing;
-    Queen whiteQueen, blackQueen;
-    Bishop[] whiteBishop, blackBishop;
-    Knight[] whiteKnight, blackKnight;
-    Rook[] whiteRook, blackRook;
+    private Pawn[] whitePawns, blackPawns;
+    private King whiteKing, blackKing;
+    private Queen whiteQueen, blackQueen;
+    private Bishop[] whiteBishop, blackBishop;
+    private Knight[] whiteKnight, blackKnight;
+    private Rook[] whiteRook, blackRook;
 
     // CONSTRUCTOR
     public Board(SpriteBatch sb){
@@ -75,8 +76,8 @@ public class Board{
         greenSquare = Util.loadSprite(greenSquareFileName);
         redSquare = Util.loadSprite(redSquareFileName);
 
-        pieceMatrix = new Piece[8][8]; // Empty squares are null
-        boardColor = new Sprite[8][8];
+        pieceMatrix = new Piece[BOARD_SIZE][BOARD_SIZE]; // Empty squares are null
+        boardColor = new Sprite[BOARD_SIZE][BOARD_SIZE];
 
         // Creating pawns
         whitePawns = new Pawn[8];
@@ -132,6 +133,8 @@ public class Board{
         // Creatin king
         blackKing = new King(new Position(3,7), this, Util.loadSprite(Util.blackKing), true);
         whiteKing = new King(new Position(4,0), this, Util.loadSprite(Util.whiteKing), false);
+        blackKing.setType(PieceType.KING);
+        whiteKing.setType(PieceType.KING);
         pieceMatrix[3][7] = blackKing;
         pieceMatrix[4][0] = whiteKing;
 
@@ -225,10 +228,21 @@ public class Board{
     * */
     public boolean movePiece(Position newPos){
         if(specialSquares != null && specialSquares.contains(newPos)){
-            System.out.println("Moving 2");
+            if(pieceMatrix[newPos.getX()][newPos.getY()] != null){ // Capturing an enemy piece
+                if(pieceMatrix[newPos.getX()][newPos.getY()].getType() == PieceType.KING){
+                    // If the king is captured (game over)
+                    Gdx.app.exit();
+                }
+                // The piece is gone
+                // There's still a reference to the piece so the object cannot
+                // be disposed. I'm not sure what to do with it
+                pieceMatrix[newPos.getX()][newPos.getY()] = null;
+            }
+            // Moving piece
             pieceMatrix[selectedPiece.getPosition().getX()][selectedPiece.getPosition().getY()] = null;
             pieceMatrix[newPos.getX()][newPos.getY()] = selectedPiece;
             selectedPiece.move(newPos);
+            return true;
         }
         return false;
     }
@@ -309,11 +323,11 @@ public class Board{
         spriteBatch.end();
     }
 
-    public ArrayList<Position> getSpecialSquares() {
+    public HashSet<Position> getSpecialSquares() {
         return specialSquares;
     }
 
-    public void setSpecialSquares(ArrayList<Position> specialSquares) {
+    public void setSpecialSquares(HashSet<Position> specialSquares) {
         if(this.specialSquares != null){
             for(Position square : this.specialSquares){
                 if((square.getX() + square.getY()) % 2 == 0){
@@ -345,5 +359,25 @@ public class Board{
 
     public void setSelectedPiece(Piece selectedPiece) {
         this.selectedPiece = selectedPiece;
+    }
+
+    public void dispose(){
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                if(pieceMatrix[i][j] != null){
+                    pieceMatrix[i][j].dispose();
+                }
+            }
+        }
+
+        if(blackSquare != null)
+            blackSquare.getTexture().dispose();
+        if(whiteSquare != null)
+            whiteSquare.getTexture().dispose();
+        if(greenSquare != null)
+            greenSquare.getTexture().dispose();
+        if(redSquare != null)
+            redSquare.getTexture().dispose();
+
     }
 }

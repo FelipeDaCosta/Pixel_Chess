@@ -5,6 +5,7 @@ import com.whatever.chess.board.Board;
 import com.whatever.chess.board.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javafx.geometry.Pos;
 
@@ -18,8 +19,8 @@ public class Queen extends Piece {
     }
 
     @Override
-    public ArrayList<Position> possiblePositions() {
-        ArrayList<Position> possiblePos = new ArrayList<Position>();
+    public HashSet<Position> possiblePositions() {
+        HashSet<Position> possiblePos = new HashSet<Position>();
         // Creating these variables locally so we dont have to keep calling methods
         int x = this.getPosition().getX();
         int y = this.getPosition().getY();

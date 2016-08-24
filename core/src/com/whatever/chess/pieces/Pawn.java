@@ -5,6 +5,7 @@ import com.whatever.chess.board.Board;
 import com.whatever.chess.board.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javafx.geometry.Pos;
 
@@ -28,11 +29,11 @@ public class Pawn extends Piece {
     }
 
 
-    public ArrayList<Position> possiblePositions(){
+    public HashSet<Position> possiblePositions(){
         Board board = this.getBoard();
         int x = this.getPosition().getX();
         int y = this.getPosition().getY();
-        ArrayList<Position> possiblePos = new ArrayList<Position>();
+        HashSet<Position> possiblePos = new HashSet<Position>();
         Position curPos; // Current position being analysed
 
         // If the piece is white, we're subtracting 1 to the cur Y position

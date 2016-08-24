@@ -5,6 +5,7 @@ import com.whatever.chess.board.Board;
 import com.whatever.chess.board.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by felipecosta on 8/18/16.
@@ -19,8 +20,8 @@ public class Rook extends Piece {
 
     // Works
     @Override
-    public ArrayList<Position> possiblePositions() {
-        ArrayList<Position> possiblePos = new ArrayList<Position>();
+    public HashSet<Position> possiblePositions() {
+        HashSet<Position> possiblePos = new HashSet<Position>();
         int x = this.getPosition().getX();
         int y = this.getPosition().getY();
         Board board = this.getBoard();

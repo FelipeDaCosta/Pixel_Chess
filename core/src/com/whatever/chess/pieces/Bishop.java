@@ -5,6 +5,7 @@ import com.whatever.chess.board.Board;
 import com.whatever.chess.board.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by felipecosta on 8/21/16.
@@ -17,8 +18,8 @@ public class Bishop extends Piece {
 
     // Working
     @Override
-    public ArrayList<Position> possiblePositions() {
-        ArrayList<Position> possiblePos = new ArrayList<Position>();
+    public HashSet<Position> possiblePositions() {
+        HashSet<Position> possiblePos = new HashSet<Position>();
         // Creating local variables so we don't have to keep calling methods
         int x = this.getPosition().getX();
         int y = this.getPosition().getY();

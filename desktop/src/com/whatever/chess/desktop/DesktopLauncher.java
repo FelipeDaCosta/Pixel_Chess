@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.width = 512;
 		config.height = 600;
 		config.title = "Pixel Chess";
+		config.forceExit = false; // Found this on stackOverflow, change it later
 		new LwjglApplication(new Main(), config);
 	}
 }

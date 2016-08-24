@@ -20,11 +20,10 @@ import com.whatever.chess.pieces.Piece;
  * It implements the screen interface
  */
 public class PlayScreen implements Screen, InputProcessor {
-    // We need a camera to see stuff
     OrthographicCamera camera;
-    // Sprite batch.
+
     SpriteBatch batch;
-    //  Color background
+
     Color background;
 
     Board board;
@@ -37,7 +36,7 @@ public class PlayScreen implements Screen, InputProcessor {
     *   Receives spriteBatch so we don't have to create a new one
     * */
     public PlayScreen(SpriteBatch batch) {
-        turn = true;
+        turn = false;
         this.batch = batch;
         background = new Color(0, 0, 0, 1);
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -84,7 +83,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-
+        board.dispose();
     }
 
 
@@ -107,29 +106,44 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("Clicked");
-        if(screenY < 600){
+        if(screenY < 600){ // There's no board above 600
                 Position clicked = new Position(screenX, screenY);
-                clicked.toBoard();
-                Piece clickedPiece = board.getPieceinSquare(clicked);
-                // if there's a piece selected && the piece color is playing this turn
-                if (clickedPiece != null && clickedPiece.getColor() == turn) {
-                    board.setSpecialSquares(clickedPiece.possiblePositions());
-                    board.setSelectedPiece(clickedPiece);
+                clicked.toBoard(); // Converting screen coordinates to board coordinates
+                Piece clickedPiece = board.getPieceinSquare(clicked); // Gets the piece that was clicked
+
+                if(clickedPiece != null){ // Clicked on a piece
+                    // If its the turn of the piece we clicked
+                    if(clickedPiece.getColor() == turn){
+                        // Selects the piece we clicked
+                        board.setSelectedPiece(clickedPiece);
+                        // Show green/red squares for the piece we clicked
+                        board.setSpecialSquares(clickedPiece.possiblePositions());
+                    }
+                    // If it's not the clicked piece turn and there's a selected piece
+                    // (Checking if there's a selected piece is just a safety measure)
+                    else if(board.getSelectedPiece() != null){ // Capturing some piece
+                        // We don't need to check if the piece can move to clicked because
+                        // the movePiece method will take care of that and return true
+                        // if the piece moves
+                        if(board.movePiece(clicked)){ // If the piece moves, we have to pass the turn
+                            turn = !turn;
+                        }
+                        // We clear special squares and selected pieces no matter if the movement was
+                        // valid or not
+                        board.setSelectedPiece(null);
+                        board.setSpecialSquares(null);
+                    }
                 }
-                else if(clickedPiece == null){
-                    System.out.println("Moving");
-                    board.movePiece(clicked);
-                    board.setSpecialSquares(null);
+                else{ // Clicked on an empty cell
+                    if(board.movePiece(clicked)){ // If the movement was valid, we pass the turn
+                        turn = !turn;
+                    }
+                    // We clear special squares and selected pieces no matter if the movement was
+                    // valid or not
                     board.setSelectedPiece(null);
-                }
-                else {
                     board.setSpecialSquares(null);
-                    board.setSelectedPiece(null);
                 }
         }
-
-            //board.setBoardSquare(new Position(screenX/Board.SQUARE_SIZE,(600 - screenY)/Board.SQUARE_SIZE),'g');
         return false;
     }
 

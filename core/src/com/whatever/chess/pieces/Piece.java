@@ -6,6 +6,7 @@ import com.whatever.chess.board.Board;
 import com.whatever.chess.board.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by felipe on 7/31/2016.
@@ -19,9 +20,6 @@ public abstract class Piece {
     private PieceType type;
 
     private Sprite pieceSprite;
-
-
-    private  String spritePath;
 
     // Black = true, White = false
     private boolean color;
@@ -61,8 +59,13 @@ public abstract class Piece {
     }
 
     // Returns a list with all the possible positions the piece can go to
-    public abstract ArrayList<Position> possiblePositions();
+    public abstract HashSet<Position> possiblePositions();
 
+    // Call this function to free the memory used by this piece
+    // (Not deleting object)
+    public void dispose(){
+        pieceSprite.getTexture().dispose();
+    }
 
     /*
     * Getters & Setters
@@ -95,19 +98,8 @@ public abstract class Piece {
         this.pieceSprite = pieceSprite;
     }
 
-    public String getSpritePath() {
-        return spritePath;
-    }
-
-    public void setSpritePath(String spritePath) {
-        this.spritePath = spritePath;
-    }
-
     public boolean getColor() {
         return color;
     }
 
-    public void setColor(boolean color) {
-        this.color = color;
-    }
 }

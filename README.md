@@ -6,7 +6,7 @@ The code for the game logic (it's super messy for now) is in the core folder and
 
 ### TODO
 
-- [ ] Change ArrayList to HashSet (Better performance)
+- [x] Change ArrayList to HashSet (Better performance)
 - [ ] Clean up code
 - [ ] Fix memory leaks
 - [ ] Draw better pieces
